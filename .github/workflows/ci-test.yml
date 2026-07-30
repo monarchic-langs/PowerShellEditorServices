@@ -3,8 +3,7 @@ name: CI Tests
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,11 +12,7 @@ permissions:
 jobs:
   ci:
     name: dotnet
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ windows-latest, macos-latest, ubuntu-latest ]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS) }}
     # A normal run finishes in well under an hour (Windows, the slowest, is
     # ~12-14 minutes); this caps a hung test instead of letting it ride
     # GitHub's 6-hour default.
@@ -71,12 +66,12 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: PowerShellEditorServices-module-${{ matrix.os }}
+          name: PowerShellEditorServices-module
           path: module
 
       - name: Upload test results
         uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: PowerShellEditorServices-test-results-${{ matrix.os }}
+          name: PowerShellEditorServices-test-results
           path: '**/*.trx'

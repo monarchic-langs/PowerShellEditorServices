@@ -3,9 +3,7 @@ name: Emacs End-to-End Tests
 on:
   push:
     branches: [ main ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
+  workflow_dispatch:
   merge_group:
     types: [ checks_requested ]
 
@@ -15,7 +13,7 @@ permissions:
 jobs:
   emacs:
     name: ert
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS) }}
     env:
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false

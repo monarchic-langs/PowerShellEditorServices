@@ -7,10 +7,37 @@
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
   in {
-    formatter.${system} = pkgs.alejandra;
-    packages.${system}.default = pkgs.powershell-editor-services;
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [pkgs.powershell-editor-services];
+    formatter = {
+      ${system} = pkgs.alejandra;
+    };
+    packages = {
+      ${system}.default = pkgs.powershell-editor-services;
+    };
+    checks = {
+      ${system} = {
+        default = pkgs.powershell-editor-services;
+
+        flake-format =
+          pkgs.runCommand "powershell-editor-services-flake-format-check"
+          {nativeBuildInputs = [pkgs.alejandra];}
+          ''
+            alejandra --check ${./flake.nix}
+            touch $out
+          '';
+
+        package-metadata =
+          pkgs.runCommand "powershell-editor-services-package-metadata-check"
+          {}
+          ''
+            test "${pkgs.lib.getName pkgs.powershell-editor-services}" = "powershell-editor-services"
+            touch $out
+          '';
+      };
+    };
+    devShells = {
+      ${system}.default = pkgs.mkShell {
+        packages = [pkgs.powershell-editor-services];
+      };
     };
   };
 }

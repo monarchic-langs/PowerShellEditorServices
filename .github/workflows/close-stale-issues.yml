@@ -9,7 +9,7 @@ on:
 
 jobs:
   stale-resolved-issues:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS) }}
     steps:
       - uses: actions/stale@v10
         name: Label resolved issues as needing fix verification
@@ -21,7 +21,7 @@ jobs:
           stale-issue-message: "This issue has been labeled as resolved, please verify the provided fix (or other reason)."
           labels-to-remove-when-stale: "Needs: Maintainer Attention,Needs: Triage"
   stale-fixed-issues:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS) }}
     steps:
       - uses: actions/stale@v10
         name: Close issues needing fix verification after 1 week of inactivity
@@ -32,7 +32,7 @@ jobs:
           close-issue-reason: completed
           close-issue-message: "This issue has been labeled as needing fix verification and has not had any activity a week. It has been closed for housekeeping purposes."
   stale-feedback-issues:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNNER_LABELS) }}
     steps:
       - uses: actions/stale@v10
         name: Close issues needing author feedback after 1 week of inactivity
