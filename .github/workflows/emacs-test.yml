@@ -2,7 +2,7 @@ name: Emacs End-to-End Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ monarchic ]
   workflow_dispatch:
   merge_group:
     types: [ checks_requested ]
